@@ -69,7 +69,7 @@ class DB{
 			 
 			 if(in_array($operator, $operators)){
 			     $sql = "{$action} from {$table} where {$field} {$operator} ?";
-				 echo $sql.'<br>';
+				 //echo $sql.'<br>';
 				 if(!$this->query($sql, array($value))->error()){
 				     return $this;
 				 }//if
