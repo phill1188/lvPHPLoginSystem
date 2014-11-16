@@ -35,8 +35,8 @@ class DB{
 		     $questionMark = 1;
 			 if(count($params)){ //check if $params is empty
 			     foreach($params as $param){
-				     echo $param.'<br>';
-					 echo $questionMark.'<br>';
+				     //echo $param.'<br>';
+					 //echo $questionMark.'<br>';
 				     $this->_query->bindValue($questionMark, $param);
 					 $questionMark++;
 				 }//foreach
@@ -44,11 +44,11 @@ class DB{
 			 
 			 
 			 if($this->_query->execute()){
-			     echo 'Success';
+			     //echo 'Success';
 				 $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ); //returns object instead of array
 				 $this->_count = $this->_query->rowCount();
-				 print_r($this->_results);
-				 echo '<br>'.$this->_count;
+				 //print_r($this->_results);
+				 //echo '<br>'.$this->_count;
 			 }//if
 			 else{
 			     $this->_error = true;
@@ -92,8 +92,64 @@ class DB{
 	 
 	 
 	 public function delete($table, $where){
-	     
+	     return $this->action('delete', $table, $where);
 	 }//delete()
+	 
+	 
+	 public function insert($table, $fields = array()){
+	     if(count($fields)){
+		     $keys = array_keys($fields);
+			 $values = '';
+			 $x = 1;
+			 
+			 //creates string of question-marks for each "field" separated by comma
+			 foreach($fields as $field){
+			     $values .= '?';
+				 if($x < count($fields)){
+				     $values .= ', ';
+				 }//if
+				 $x++;
+			 }//foreach
+			 
+			 $sql = "insert into users (".implode(', ', $keys).") values ({$values})";
+			 
+			 if(!$this->query($sql, $fields)->error()){
+			     return true;
+			 }//if
+		 }//if
+		 return false;
+	 }//insert()
+	 
+	 //warning! - this method returns true even if try to update id that doesn't exists
+	 public function update($table, $id, $fields){
+	     $set = '';
+		 $x = 1;
+		 
+		 foreach($fields as $name=>$value){
+		     $set .= "{$name} = ?";
+			 if($x < count($fields)){
+			     $set .= ', ';
+			 }//if
+			 $x++;
+		 }//foreach
+		 
+		 $sql = "update {$table} set {$set} where id = {$id}";
+		 
+		 if(!$this->query($sql, $fields)->error()){
+		     return true;
+		 }//if
+		 return false;
+	 }//update()
+	 
+	 
+	 public function results(){
+	     return $this->_results;
+	 }//results()
+	 
+	 
+	 public function firstResult(){
+		 return $this->results()[0];
+	 }//firstResult()
 	 
 	 
 	 public function count(){
