@@ -112,12 +112,14 @@ class DB{
 			 }//foreach
 			 
 			 $sql = "insert into users (".implode(', ', $keys).") values ({$values})";
+			 //echo $sql.'<br>';
 			 
 			 if(!$this->query($sql, $fields)->error()){
-			     return true;
+				 return true;
 			 }//if
 		 }//if
-		 return false;
+		 //return false;
+		 exit('error inserting');
 	 }//insert()
 	 
 	 //warning! - this method returns true even if try to update id that doesn't exists

@@ -1,30 +1,29 @@
 <?php
-
-class DB{
-     private $_pdo;
+class Prob{
+     private static $instance = null;
+	     
+	 //private function __construct(){
+		 //$instance = new Prob();
+	 //}
 	 
-	 
-	 public function __construct(){
-	     try{
-		     $this->_pdo = new PDO('mysql:host=127.0.0.1;dbname=logtest', 'root', 'system11');
-		     echo 'Connected<br>';
-		 }//try
-		 catch(PDOException $e){
-		     exit($e->getMessage());
-		 }//catch
-	 }//__construct()
-	 
-	 public function query(){
-	     $sql = 'select name from users where username = ?';
-		 $query = $this->_pdo->prepare($sql);
-		 $query->bindValue(1, 'mmm');
-		 if($query->execute()){
-		     echo 'Success<br>';
-			 $result = $query->fetchAll(PDO::FETCH_OBJ);
-		     print_r($result);
+	 public static function start(){
+		 if(!self::$instance){
+		     self::$instance = new Prob();
 		 }
-	 }//query()
-}//class DB
+		 return self::$instance;
+	 }//start()
+	 
+	 public function edno(){
+	     self::dve();
+	 }//edno()
+	 
+	 public static function dve(){
+	     echo 'pdpdp';
+	 }//dve()
+}//class Prob
 
-$worker = new DB();
-$worker->query();
+Prob::start()->edno();
+?>
+<br>
+<?php
+Prob::dve();
